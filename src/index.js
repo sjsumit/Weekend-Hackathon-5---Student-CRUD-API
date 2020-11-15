@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express();
 const bodyParser = require("body-parser");
-const studentArray = require('./InitialData.js');
+const studentArray = require('./initialData.js');
 const Joi = require("joi");
 const port = 8080
 app.use(express.urlencoded());
