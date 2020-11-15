@@ -1,6 +1,8 @@
 const express = require('express')
-const app = express()
+const app = express();
 const bodyParser = require("body-parser");
+const studentArray = require('./InitialData.js');
+const Joi = require("joi");
 const port = 8080
 app.use(express.urlencoded());
 
@@ -8,9 +10,81 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-// your code goes here
 
+app.get('/api/student', (req, res) => {
+    res.send(studentArray);
+});
 
-app.listen(port, () => console.log(`App listening on port ${port}!`))
+app.get('/api/student/:id', (req, res) => {
+    const id = req.params.id;
+    const student = studentArray.find(student => student.id === parseInt(id));
+    if (!student) {
+        res.status(404).send(`Student with id ${id} was not found!`);
+        return;
+    }
+    res.send(student);
+});
 
-module.exports = app;   
+app.post('/api/student', (req, res) => {
+    //req.body
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        currentClass: Joi.number().required(),
+        division: Joi.string().required()
+    });
+    const validationObject = schema.validate(req.body);
+    if (validationObject.error) {
+        res.status(400).send(validationObject.error.details[0].message);
+        return;
+    }
+    const newId=studentArray.length + 1;
+    var student = {
+        id: newId,
+        ...req.body
+    };
+
+    studentArray.push(student);
+    res.send({id:newId});
+});
+
+app.put('/api/student/:id', (req, res) => {
+    const id = req.params.id;
+    const studentIndex = studentArray.findIndex(student => student.id === parseInt(id));
+
+    if (studentIndex===-1) {
+        res.status(400).send("Student with Invalid id");
+        return;
+    }
+
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        currentClass: Joi.number().required(),
+        division: Joi.string().required()
+    });
+
+    const validationObject = schema.validate(req.body);
+    if (validationObject.error) {
+        res.status(400).send("Invalid Update");
+        return;
+    }
+
+    studentArray.splice(studentIndex, 1, {id: parseInt(id),...req.body});
+    res.send(studentArray[studentIndex]);
+});
+
+app.delete('/api/student/:id', (req, res) => {
+    const id = req.params.id;
+    //if id does not exist, return 404
+    const studentIndex = studentArray.findIndex(student => student.id === parseInt(id));
+    if (studentIndex===-1) {
+        res.status(40).send("Student with Invalid id provided");
+        return;
+    }
+    const student = studentArray[studentIndex];
+    studentArray.splice(studentIndex, 1);
+    res.send(student);
+});
+
+app.listen(port, () => console.log(`App listening on port ${port}!`));
+
+module.exports = app;
