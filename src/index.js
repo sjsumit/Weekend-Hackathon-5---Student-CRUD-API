@@ -61,19 +61,23 @@ app.put('/api/student/:id', (req, res) => {
 
     const schema = Joi.object({
         name: Joi.string().required(),
-        currentClass: Joi.number().required(),
+        currentClass: Joi.string().required(),
         division: Joi.string().required()
     });
-
+    
     const validationObject = schema.validate(req.body);
     if (validationObject.error) {
         res.status(400).send("Invalid Update");
         return;
     }
+    if(!Number.isInteger(req.body.currentClass)){
+            res.status(400).send();
+            return; 
+    }
 
     studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],...req.body});
     //studentArray[studentIndex].id=parseInt(id);
-    res.send(studentArray[studentIndex]);
+    res.send(studentArray[studentIndex].name);
 });
 
 app.delete('/api/student/:id', (req, res) => {
