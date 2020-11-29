@@ -46,7 +46,7 @@ app.post('/api/student', (req, res) => {
         ...req.body
     };
     studentArray.push(student);
-    res.send({"id":newId});
+    res.send({"id":student.id});
 });
 
 app.put('/api/student/:id', (req, res) => {
