@@ -39,7 +39,7 @@ app.post('/api/student', (req, res) => {
         res.status(400).send(validationObject.error.details[0].message);
         return;
     }
-    const newId=studentArray[studentArray.length-1]+1;
+    const newId=studentArray.length+1;
 
     const student = {
         id: newId,
