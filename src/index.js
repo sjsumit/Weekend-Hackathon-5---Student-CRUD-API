@@ -71,7 +71,7 @@ app.put('/api/student/:id', (req, res) => {
         return;
     }
 
-    studentArray.splice(studentIndex, 1, {id: parseInt(id),...req.body});
+    studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],...req.body});
     //studentArray[studentIndex].id=parseInt(id);
     res.send(studentArray[studentIndex]);
 });
