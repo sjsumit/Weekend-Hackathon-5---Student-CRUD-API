@@ -37,14 +37,15 @@ app.post('/api/student', (req, res) => {
         res.status(400).send(validationObject.error.details[0].message);
         return;
     }
-    const newId=studentArray.length + 1;
+    const newId=studentArray[studentArray.length-1].id + 1;
     var student = {
         id: newId,
         ...req.body
+        currentClass:parseInt(req.body.currentClass);
     };
 
     studentArray.push(student);
-    res.send({id:newId});
+    res.send({"id":newId});
 });
 
 app.put('/api/student/:id', (req, res) => {
@@ -70,7 +71,7 @@ app.put('/api/student/:id', (req, res) => {
 
     //studentArray.splice(studentIndex, 1, {id: parseInt(id),...req.body});
     studentArray[studentIndex].id=parseInt(id);
-    res.send(studentArray[studentIndex]);
+    res.send(studentArray[studentIndex].name);
 });
 
 app.delete('/api/student/:id', (req, res) => {
