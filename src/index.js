@@ -4,12 +4,15 @@ const bodyParser = require("body-parser");
 const studentArray = require('./initialData.js');
 const Joi = require('joi');
 const port = 8080
+
 app.use(express.urlencoded());
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+const newId=studentArray.length;
+
 
 app.get('/api/student', (req, res) => {
     res.send(studentArray);
@@ -37,13 +40,13 @@ app.post('/api/student', (req, res) => {
         res.status(400).send(validationObject.error.details[0].message);
         return;
     }
-    const newId=studentArray.length + 1;
+
     const student = {
-        id: newId,
+        id: ++newId,
         ...req.body
     };
     studentArray.push(student);
-    res.send({id:newId});
+    res.send({"id":newId});
 });
 
 app.put('/api/student/:id', (req, res) => {
