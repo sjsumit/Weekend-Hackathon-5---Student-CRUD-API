@@ -68,7 +68,8 @@ app.put('/api/student/:id', (req, res) => {
         return;
     }
 
-    studentArray.splice(studentIndex, 1, {id: parseInt(id),...req.body});
+    //studentArray.splice(studentIndex, 1, {id: parseInt(id),...req.body});
+    studentArray[studentIndex].id=parseInt(id);
     res.send(studentArray[studentIndex]);
 });
 
@@ -77,7 +78,7 @@ app.delete('/api/student/:id', (req, res) => {
     //if id does not exist, return 404
     const studentIndex = studentArray.findIndex(student => student.id === parseInt(id));
     if (studentIndex===-1) {
-        res.status(40).send("Student with Invalid id provided");
+        res.status(404).send("Student with Invalid id provided");
         return;
     }
     const student = studentArray[studentIndex];
