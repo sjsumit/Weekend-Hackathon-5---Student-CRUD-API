@@ -43,7 +43,8 @@ app.post('/api/student', (req, res) => {
 
     const student = {
         id: newId,
-        ...req.body
+        ...req.body,
+        currentClass: parseInt(req.body.currentClass)
     };
     studentArray.push(student);
     res.send({"id":student.id});
