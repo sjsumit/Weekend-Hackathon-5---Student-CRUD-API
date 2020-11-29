@@ -11,7 +11,6 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-const newId=studentArray.length;
 
 
 app.get('/api/student', (req, res) => {
@@ -40,9 +39,10 @@ app.post('/api/student', (req, res) => {
         res.status(400).send(validationObject.error.details[0].message);
         return;
     }
+    const newId=studentArray[studentArray.length-1]+1;
 
     const student = {
-        id: ++newId,
+        id: newId,
         ...req.body
     };
     studentArray.push(student);
