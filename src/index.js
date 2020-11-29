@@ -38,14 +38,13 @@ app.post('/api/student', (req, res) => {
         return;
     }
     const newId=studentArray[studentArray.length-1].id + 1;
-    var student = {
+    const student = {
         id: newId,
-        ...req.body
+        ...req.body,
         currentClass:parseInt(req.body.currentClass);
     };
-
     studentArray.push(student);
-    res.send({"id":newId});
+    res.send({"id":id});
 });
 
 app.put('/api/student/:id', (req, res) => {
