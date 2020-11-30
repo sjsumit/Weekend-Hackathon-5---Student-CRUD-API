@@ -81,7 +81,7 @@ app.put('/api/student/:id', (req, res) => {
     else if(studentArray[studentIndex].division!== req.body.division)                                 
         studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],division:req.body.division});
     //studentArray[studentIndex].id=parseInt(id);
-    res.send(studentArray[studentIndex].name);
+    res.send(studentArray[studentIndex]);
 });
 
 app.delete('/api/student/:id', (req, res) => {
