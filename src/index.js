@@ -74,8 +74,12 @@ app.put('/api/student/:id', (req, res) => {
             res.status(400).send();
             return; 
     }
-
-    studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],...req.body});
+    if(studentArray[studentIndex].name!== req.body.name)
+        studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],name:req.body.name});
+    else if(studentArray[studentIndex].currentClass!== req.body.currentClass)
+        studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],currentClass:req.body.currentClass);
+    else if(studentArray[studentIndex].division!== req.body.division)                                 
+        studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],division:req.body.division);
     //studentArray[studentIndex].id=parseInt(id);
     res.send(studentArray[studentIndex].name);
 });
