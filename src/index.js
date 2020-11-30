@@ -51,37 +51,82 @@ app.post('/api/student', (req, res) => {
 });
 
 app.put('/api/student/:id', (req, res) => {
-    const id = req.params.id;
-    const studentIndex = studentArray.findIndex(student => student.id === parseInt(id));
+//     const id = req.params.id;
+//     const studentIndex = studentArray.findIndex(student => student.id === parseInt(id));
 
-    if (studentIndex===-1) {
-        res.status(400).send("Student with Invalid id");
-        return;
-    }
+//     if (studentIndex===-1) {
+//         res.status(400).send("Student with Invalid id");
+//         return;
+//     }
 
-    const schema = Joi.object({
-        name: Joi.string().required(),
-        currentClass: Joi.string().required(),
-        division: Joi.string().required()
-    });
+//     const schema = Joi.object({
+//         name: Joi.string().required(),
+//         currentClass: Joi.string().required(),
+//         division: Joi.string().required()
+//     });
     
-    const validationObject = schema.validate(req.body);
-    if (validationObject.error) {
-        res.status(400).send("Invalid Update");
+//     const validationObject = schema.validate(req.body);
+//     if (validationObject.error) {
+//         res.status(400).send("Invalid Update");
+//         return;
+//     }
+//     if(!Number.isInteger(req.body.currentClass)){
+//             res.status(400).send();
+//             return; 
+//     }
+//     if(studentArray[studentIndex].name!== req.body.name)
+//         studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],name:req.body.name});
+//     else if(studentArray[studentIndex].currentClass!== req.body.currentClass)
+//         studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],currentClass:req.body.currentClass});
+//     else if(studentArray[studentIndex].division!== req.body.division)                                 
+//         studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],division:req.body.division});
+//     //studentArray[studentIndex].id=parseInt(id);
+//     res.send(studentArray[studentIndex]);
+    
+     const studentId = req.params.id;
+
+    const student = studentArray.find(el => el.id === parseInt(studentId));
+    
+
+    if(!student){
+        res.status(400).send();
         return;
     }
-    if(!Number.isInteger(req.body.currentClass)){
+    else if(req.body.name){
+        if(req.body.name.length === 0){
             res.status(400).send();
             return; 
+        }
     }
-    if(studentArray[studentIndex].name!== req.body.name)
-        studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],name:req.body.name});
-    else if(studentArray[studentIndex].currentClass!== req.body.currentClass)
-        studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],currentClass:req.body.currentClass});
-    else if(studentArray[studentIndex].division!== req.body.division)                                 
-        studentArray.splice(studentIndex, 1, {id: parseInt(id),...studentArray[studentIndex],division:req.body.division});
-    //studentArray[studentIndex].id=parseInt(id);
-    res.send(studentArray[studentIndex]);
+    else if(req.body.currentClass){
+        if(!Number.isInteger(req.body.currentClass)){
+            res.status(400).send();
+            return; 
+        }
+    }
+    else if(req.body.division){
+        if(!req.body.division.length === 1 || !req.body.division.match(/[A-Z]/)){
+            res.status(400).send();
+            return; 
+        }
+    }
+
+    const studentIndex = studentArray.findIndex((el) => el.id === parseInt(studentId));
+
+    const newStudent= {
+        id: studentId,
+        ...student,
+        ...req.body
+    }
+
+    let classStudent = Number(newStudent.currentClass); 
+
+    newStudent.currentClass = classStudent;
+
+    studentArray.splice(studentIndex, 1, newStudent);
+
+    //res.setHeader(['{"content-type":"application/x-www-form-urlencoded"}']);
+    res.send(newStudent.name);
 });
 
 app.delete('/api/student/:id', (req, res) => {
